@@ -1,45 +1,48 @@
-package med.voll.api.medico;
+package med.voll.api.paciente;
 
 import jakarta.persistence.*;
 import lombok.*;
+import med.voll.api.endereco.DadosEndereco;
 import med.voll.api.endereco.Endereco;
 
-@Table(name = "medicos")
-@Entity(name = "Medico")
+@Table(name = "pacientes")
+@Entity(name = "Paciente")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Medico {
+public class Paciente {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nome;
-    private String email;
-    private String telefone;
-    private String crm;
 
-    @Enumerated(EnumType.STRING)
-    private Especialidade especialidade;
+    private String nome;
+
+    private String email;
+
+    private String telefone;
+
+    private String cpf;
 
     @Embedded
     private Endereco endereco;
 
-    public Medico(DadosCadastroMedico dados) {
+    public Paciente(dadosCadastroPaciente dados) {
         this.nome = dados.nome();
         this.email = dados.email();
         this.telefone = dados.telefone();
-        this.crm = dados.crm();
-        this.especialidade = dados.especialidade();
+        this.cpf = dados.cpf();
         this.endereco = new Endereco(dados.endereco());
     }
 
-    public void atualizarInformacoes(DadosAtualizacaoMedico dados) {
+    public void atualizarInformacoes(DadosAtualizacaoPaciente dados) {
         if (dados.nome() != null) {
             this.nome = dados.nome();
         }
-        //if foi criado para atualizar somente se a informação adicionada for diferente de nulo, caso contrário
-        //não atualiza.
+        if (dados.email() != null) {
+            this.email = dados.email();
+        }
 
         if (dados.telefone() != null) {
             this.telefone = dados.telefone();
@@ -49,5 +52,4 @@ public class Medico {
             this.endereco.atualizarInformacoes(dados.endereco());
         }
     }
-
 }
